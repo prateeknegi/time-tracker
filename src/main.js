@@ -10,20 +10,9 @@ Vue.use(VueResource)
 
 /* eslint-disable no-new */
 
-router.map({
-  '/hello': {
-    component: Hello
-  }
+new Vue({
+  el: '#app',
+  router,
+  template: '<App/>',
+  components: { App }
 })
-
-router.redirect({
-  '*': '/hello'
-})
-
-router.start(App, '#app')
-// new Vue({
-//   el: '#app',
-//   router,
-//   template: '<App/>',
-//   components: { App }
-// })
