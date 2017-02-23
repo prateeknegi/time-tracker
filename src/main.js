@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
-import Hello from './components/Hello.vue'
 
 Vue.use(VueResource)
 

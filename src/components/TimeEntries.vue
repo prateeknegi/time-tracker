@@ -58,6 +58,8 @@
   </div>
 </template>
 <script>
+  import bus from '../bus'
+
   export default {
     data() {
       let existingEntry = {
@@ -77,25 +79,34 @@
         timeEntries: [existingEntry]
       }
     },
+    created: function(){
+      console.log("timeEntries created.....")
+      bus.$on('timeUpdate', this.timeUpdate)
+    },
+    beforeDestroy: function() {
+      console.log("timeEntries beforeDestroy.....")
+      bus.$off('timeUpdate', this.timeUpdate)
+    },
     methods: {
       gotoLogTime() {
-        this.$router.push({ path: '/time-entries' })
+        this.$router.push({ path: '/time-entries/log-time' })
       },
-      deleteTimeEntry (timeEntry) {
+
+      deleteTimeEntry(timeEntry) {
         // Get the index of the clicked time entry and splice it out
         let index = this.timeEntries.indexOf(timeEntry)
         if (window.confirm('Are you sure you want to delete this time entry?')) {
           this.timeEntries.splice(index, 1)
-          this.$dispatch('deleteTime', timeEntry)
+          console.log(bus);
+          bus.$emit('deleteTime', timeEntry)
         }
+      },
+
+      timeUpdate (timeEntry) {
+        console.log("timeUpdate", timeEntry)
+        this.timeEntries.push(timeEntry)
       }
-    },
-    events: {
-     timeUpdate (timeEntry) {
-       this.timeEntries.push(timeEntry)
-       return true
-     }
-   }
+    }
   }
 </script>
 <style>
