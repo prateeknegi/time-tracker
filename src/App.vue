@@ -27,7 +27,7 @@
     </nav>
     <div class="container">
       <div class="col-sm-3">
-
+          <sidebar :time="totalTime"></sidebar>
       </div>
       <div class="col-sm-9">
         <router-view></router-view>
@@ -38,8 +38,38 @@
 
 <script>
 
+import Sidebar from './components/Sidebar.vue'
+import bus from './bus'
+
 export default {
-    name: 'app'
+    name: 'app',
+    components: { 'sidebar': Sidebar },
+    data () {
+      return {
+        // Start with the same value as our
+        // first time entry. Hard-coded for now
+        // because we'll use a different approach
+        totalTime: 1.5
+      }
+    },
+    created: function(){
+      console.log("App created.....")
+      bus.$on('timeUpdate', this.timeUpdate)
+      bus.$on('deleteTime', this.timeDelete)
+    },
+    beforeDestroy: function() {
+      console.log("App beforeDestroy.....")
+      bus.$off('timeUpdate', this.timeUpdate)
+      bus.$off('deleteTime', this.timeDelete)
+    },
+    methods: {
+      timeUpdate(timeEntry) {
+         this.totalTime += parseFloat(timeEntry.totalTime)
+      },
+      timeDelete(timeEntry) {
+         this.totalTime -= parseFloat(timeEntry.totalTime)
+      }
+    }
 }
 
 </script>
